@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Movie List</h1>
+<hr>
+{% if request.user.is_superuser %}
+    <a href="{% url 'community:movie_create' %}"><button class="btn btn-secondary">영화 등록</button></a>
+{% endif %}
+<ul>
+    {% for movie in movies %}
+        <li><a href="{% url 'community:movie_detail' movie.pk %}">{{ movie.title }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

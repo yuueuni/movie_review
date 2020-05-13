@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}NEW{% endblock %}
+
+{% block content %}
+{% if request.resolver_match.url_name == 'movie_create' %}
+    <h1>New Movie</h1>
+{% elif request.resolver_match.url_name == 'review_create' %}
+    <h1>New Review - {{ movie.title }}</h1>
+{% else%}
+    <h1>Modify Review</h1>
+{% endif %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button class="btn btn-secondary">등록</button>
+</form>
+{% endblock %}

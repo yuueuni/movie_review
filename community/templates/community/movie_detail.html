@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Movie{% endblock %}
+
+{% block content %}
+<h1>{{ movie.title }}</h1>
+<img class="img-thumbnail" src="{{ movie.poster }}" alt="">
+<hr>
+<a href="{% url 'community:review_create' movie.pk %}"><button class="btn btn-secondary">리뷰 등록</button></a>
+{% for review in movie.reviews.all %}
+    <p><a href="{% url 'community:review_detail' movie.pk review.pk %}">{{ review.title }}</a></p>
+    <p>좋아요 : {{ review.like_user.count }}명</p>
+    <hr>
+{% empty %}
+<p>등록된 리뷰가 없습니다.</p>
+{% endfor %}
+{% endblock %}
