@@ -11,7 +11,7 @@ from .forms import MovieForm, ReviewForm, CommentForm
 def index(request):
     movies = Movie.objects.order_by('-pk')
     context = {
-        'movies':movies,
+        'movies': movies,
     }
     return render(request, 'community/index.html', context)
 
