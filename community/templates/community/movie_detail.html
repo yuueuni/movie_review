@@ -4,15 +4,38 @@
 {% block title %}Movie{% endblock %}
 
 {% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-white mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'community:index' %}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Movie</li>
+  </ol>
+</nav>
+
 <h1>{{ movie.title }}</h1>
-<img class="img-thumbnail" src="{{ movie.poster }}" alt="">
 <hr>
-<a href="{% url 'community:review_create' movie.pk %}"><button class="btn btn-secondary">리뷰 등록</button></a>
-{% for review in movie.reviews.all %}
-    <p><a href="{% url 'community:review_detail' movie.pk review.pk %}">{{ review.title }}</a></p>
-    <p>좋아요 : {{ review.like_user.count }}명</p>
-    <hr>
-{% empty %}
-<p>등록된 리뷰가 없습니다.</p>
-{% endfor %}
+<div class="text-right mb-3">
+    <a href="{% url 'community:review_create' movie.pk %}"><button class="btn btn-secondary btn-sm">리뷰 등록</button></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Review Title</th>
+      <th scope="col">Like</th>
+      <th scope="col">Rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in movie.reviews.all %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td><a href="{% url 'community:review_detail' movie.pk review.pk %}">{{ review.title }}</a></td>
+          <td>{{ review.like_user.count }}</td>
+          <td>{{ review.rank }}</td>
+        </tr>
+    {% empty %}
+    <p>등록된 리뷰가 없습니다.</p>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

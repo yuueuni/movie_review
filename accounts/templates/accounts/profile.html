@@ -4,33 +4,49 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<h1>{{ user.username }}</h1>
-<hr>
-<p>팔로워 : {{ user.followers.count }}명</p>
-<p>팔로잉 : {{ user.followings.count }}명</p>
-{% if request.user.is_authenticated %}
-    {% if request.user == user %}
-        <a href="{% url 'accounts:update' %}"><button class="btn btn-secondary">회원 수정</button></a>
-        <form action="{% url 'accounts:delete' %}" method="POST">
-            {% csrf_token %}
-            <button class="btn btn-danger">회원 탈퇴</button>
-        </form>
-    {% else %}
-        {% if request.user in user.followers.all %}
-            <a href="{% url 'accounts:follow' user.pk %}"><i class="fas fa-user-check fa-2x"></i></a>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-white mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'community:index' %}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Member</li>
+  </ol>
+</nav>
+<div class="d-flex justify-content-between">
+    <h1>{{ user.username }}</h1>
+    <p class="align-text-bottom text-right mb-0">팔로워 : {{ user.followers.count }}명 | 팔로잉 : {{ user.followings.count }}명</p>
+</div>
+<div class="text-right">
+    {% if request.user.is_authenticated %}
+        {% if request.user == user %}
+        <div class="d-flex justify-content-end mb-1">
+            <a href="{% url 'accounts:update' %}"><button class="btn btn-secondary btn-sm mr-2">수정</button></a>
+            <form action="{% url 'accounts:delete' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-secondary btn-sm">탈퇴</button>
+            </form>
+        </div>
         {% else %}
-            <a href="{% url 'accounts:follow' user.pk %}"><i class="fas fa-user-plus fa-2x"></i></a>
+            {% if request.user in user.followers.all %}
+                <a href="{% url 'accounts:follow' user.pk %}"><i class="fas fa-user-check fa-2x" style="color:gray;"></i></a>
+            {% else %}
+                <a href="{% url 'accounts:follow' user.pk %}"><i class="fas fa-user-plus fa-2x"></i></a>
+            {% endif %}
         {% endif %}
     {% endif %}
-{% endif %}
-<hr>
-<h3>{{ user.username }}님이 작성한 리뷰 | {{ user.reviews.count }}개</h3>
-{% for review in user.reviews.all %}
-    <p>제목 : {{ review.title }} ({{ review.comments.count }}</p>
-    <p>영화 제목 : {{ review.movie_title }}</p>
-    <p>좋아요 : {{ review.like_user.count }}명</p>
-    <hr>
-{% empty %}
-<p>등록된 리뷰가 없습니다.</p>
-{% endfor %}
+</div>
+<br>
+<p>리뷰 ({{ user.reviews.count }})</p>
+<div class="card-group">
+    {% for review in user.reviews.all %}
+    <div class="card text-center" style="width: 18rem;">
+        <div class="card-body">
+            <h4>{{ review.movie_title.title }}</h4>
+            <p class="mb-0">평점 : {{ review.rank }}점</p>
+            <p>좋아요 : {{ review.like_user.count }}명</p>
+            <a href="{% url 'community:review_detail' review.movie_title.pk review.pk %}"><button class="btn btn-primary btn-sm mr-2">리뷰보기</button></a>
+        </div>
+    </div>
+    {% empty %}
+    <p>등록된 리뷰가 없습니다.</p>
+    {% endfor %}
+</div>
 {% endblock %}
