@@ -1,5 +1,8 @@
 # Movie Review
 
+## Heroku 배포
+* https://onenonly.herokuapp.com/
+
 ## Project Structure
 ```
 django_pjt4
