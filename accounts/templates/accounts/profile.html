@@ -35,14 +35,16 @@
 </div>
 <br>
 <p>리뷰 ({{ user.reviews.count }})</p>
-<div class="card-group">
+<div class="row row-cols-1 row-cols-md-3">
     {% for review in user.reviews.all %}
-    <div class="card text-center" style="width: 18rem;">
-        <div class="card-body">
-            <h4>{{ review.movie_title.title }}</h4>
-            <p class="mb-0">평점 : {{ review.rank }}점</p>
-            <p>좋아요 : {{ review.like_user.count }}명</p>
-            <a href="{% url 'community:review_detail' review.movie_title.pk review.pk %}"><button class="btn btn-primary btn-sm mr-2">리뷰보기</button></a>
+    <div class="col-3 mb-4">
+        <div class="card text-center" style="width: 18rem;">
+            <div class="card-body">
+                <h4>{{ review.movie_title.title }}</h4>
+                <p class="mb-0">평점 : {{ review.rank }}점</p>
+                <p>좋아요 : {{ review.like_user.count }}명</p>
+                <a href="{% url 'community:review_detail' review.movie_title.pk review.pk %}"><button class="btn btn-primary btn-sm mr-2">리뷰보기</button></a>
+            </div>
         </div>
     </div>
     {% empty %}

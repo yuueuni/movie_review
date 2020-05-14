@@ -11,17 +11,31 @@
     <li class="breadcrumb-item active" aria-current="page">Review</li>
   </ol>
 </nav>
-
-<div>
-    <h1>
-        {{ review.title }}
-        <button type="button" class="btn btn-primary btn-sm">
-            평점 <span class="badge badge-light">{{ review.rank }}</span>
-        </button>
-    </h1>
-    <h3>- {{ review.movie_title.title }}</h3>
+<div class="d-flex justify-content-between">
+    <h1>{{ review.title }} <button type="button" class="btn btn-primary btn-sm">평점 <span class="badge badge-light">{{ review.rank }}</span></button></h1>
+    <p class="mb-0">작성자 : <a href="{% url 'accounts:profile' review.user.pk %}">{{ review.user }}</a></p>
 </div>
-<p>{{ review.content }}</p>
+<div class="row">
+    <div class="col-9 p-3">
+        <p>{{ review.content }}</p>
+    </div>
+    <div class="col-3 text-center">
+        <img class="w-50 m-3" src="{{ movie.poster }}">
+        <p>{{ review.movie_title.title }}</p>
+    </div>
+</div>
+
+{% if request.user.is_authenticated %}
+    {% if request.user in review.like_user.all %}
+        <p class="mb-0"><a href="{% url 'community:review_like' movie.pk review.pk %}"><i class="fas fa-heart fa-lg" style="color:crimson;"></i></a> {{ review.like_user.count }}명이 좋아합니다.</p>
+    {% else %}
+        <p class="mb-0"><a href="{% url 'community:review_like' movie.pk review.pk %}"><i class="far fa-heart fa-lg" style="color:crimson;"></i></a> {{ review.like_user.count }}명이 좋아합니다.</p>
+    {% endif %}
+{% else %}
+<p class="mb-0"><i class="far fa-heart fa-lg" style="color:crimson;"></i> {{ review.like_user.count }}명이 좋아합니다.</p>
+{% endif %}
+
+<hr>
 <div class="d-flex justify-content-end mb-1">
     {% if request.user == review.user %}
         <a href="{% url 'community:review_update' movie.pk review.pk %}"><button class="btn btn-primary btn-sm mr-2">수정하기</button></a>
@@ -31,21 +45,6 @@
         </form>
     {% endif %}
 </div>
-<div class="d-flex justify-content-between">
-    <p class="mb-0">작성자 : <a href="{% url 'accounts:profile' review.user.pk %}">{{ review.user }}</a></p>
-    <div class="text-right d-block">
-        {% if request.user.is_authenticated %}
-            {% if request.user in review.like_user.all %}
-                <p class="mb-0"><a href="{% url 'community:review_like' movie.pk review.pk %}"><i class="fas fa-heart fa-lg" style="color:crimson;"></i></a> {{ review.like_user.count }}명이 좋아합니다.</p>
-            {% else %}
-                <p class="mb-0"><a href="{% url 'community:review_like' movie.pk review.pk %}"><i class="far fa-heart fa-lg" style="color:crimson;"></i></a> {{ review.like_user.count }}명이 좋아합니다.</p>
-            {% endif %}
-        {% else %}
-        <p class="mb-0"><i class="far fa-heart fa-lg" style="color:crimson;"></i> {{ review.like_user.count }}명이 좋아합니다.</p>
-        {% endif %}
-    </div>
-</div>
-<hr>
 <h5>댓글 목록 ({{ review.comments.count }})</h5>
 <form action="{% url 'community:comments_create' movie.pk review.pk %}" method="POST">
     {% csrf_token %}
