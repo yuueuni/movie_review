@@ -14,8 +14,9 @@
 </div>
 <hr>
 
-<div class="card-deck">
+<div class="row row-cols-1 row-cols-md-3">
     {% for movie in movies %}
+  <div class="col-4 mb-4">
       <div class="card">
         <img class="card-img-top w-50 mx-auto m-3" src="{{ movie.poster }}" alt="Card image cap">
         <div class="card-body">
@@ -26,6 +27,7 @@
           <small><a class="btn btn-primary" href="{% url 'community:movie_detail' movie.pk %}">리뷰보기</a></small>
         </div>
       </div>
+  </div>
     {% endfor %}
 </div>
 {% endblock %}
